@@ -1,0 +1,85 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ===== Dependencies =====
+/node_modules
+/.pnp
+.pnp.*
+
+# ===== Testing =====
+/coverage
+*.lcov
+
+# ===== Next.js (있다면) =====
+/.next/
+/out/
+next-env.d.ts
+
+# ===== Production Build =====
+/build
+/dist
+
+# ===== Environment Variables =====
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# 단, 템플릿은 커밋
+!.env.example
+!.env.local.example
+
+# ===== Vercel =====
+.vercel
+
+# ===== TypeScript =====
+*.tsbuildinfo
+
+# ===== Logs =====
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+logs
+*.log
+
+# ===== IDE =====
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== macOS =====
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ===== Windows =====
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===== 보안 / 인증서 =====
+*.pem
+*.key
+*.cert
+*.p12
+
+# ===== Claude Code =====
+# 로컬 전용 설정만 무시 (.claude/settings.json은 공유)
+.claude/settings.local.json
+.claude/.credentials
+.claude/scheduled_tasks.lock
+.claude/.tasks/
+
+# ===== 임시 파일 =====
+*.tmp
+*.temp
+.cache/

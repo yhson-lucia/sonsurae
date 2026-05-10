@@ -1,0 +1,428 @@
+@import "tailwindcss";
+
+/* KaTeX — 본문 LaTeX 수식 렌더링용 CSS. 학습 노트의 수식 표현 핵심. */
+@import "katex/dist/katex.min.css";
+
+/*
+ * 손수레 디자인 토큰 v2
+ *  - 따뜻한 ink + jade. slate-emerald 보다 차별화.
+ *  - 학습 노트 + 지식그래프 정체성 — 노드/엣지가 시각 모티프.
+ *  - 다크모드 first-class (깊은 미드나잇 잉크).
+ */
+
+:root {
+  /* 배경 — 따뜻한 크림톤 */
+  --background:        oklch(99% 0.005 85);
+  --background-soft:   oklch(97% 0.008 85);
+  --background-mute:   oklch(94% 0.01 85);
+
+  /* 본문 — 깊은 잉크 */
+  --foreground:        oklch(18% 0.025 270);
+  --foreground-soft:   oklch(40% 0.018 270);
+  --foreground-mute:   oklch(58% 0.012 270);
+
+  /* 경계선 */
+  --border:            oklch(92% 0.012 85);
+  --border-strong:     oklch(86% 0.015 85);
+
+  /* Accent — 비비드 제이드 (그래프 노드 / CTA / 링크) */
+  --accent:            oklch(60% 0.16 175);
+  --accent-hover:      oklch(54% 0.16 175);
+  --accent-soft:       oklch(94% 0.05 175);
+  --accent-fg:         oklch(99% 0.005 175);
+
+  /* Accent 2 — 따뜻한 호박색 (강조 포인트) */
+  --warm:              oklch(68% 0.15 55);
+  --warm-soft:         oklch(94% 0.05 60);
+
+  /* 그라디언트 — Hero 헤딩 */
+  --grad-from:         oklch(60% 0.16 175);
+  --grad-via:          oklch(64% 0.15 145);
+  --grad-to:           oklch(70% 0.14 55);
+
+  /* 코드 */
+  --code-bg:           oklch(95% 0.008 85);
+  --code-fg:           oklch(28% 0.02 270);
+  --code-block-bg:     oklch(15% 0.015 270);
+  --code-block-fg:     oklch(94% 0.008 85);
+
+  /* 그래프뷰 */
+  --graph-node:        oklch(40% 0.025 270);
+  --graph-node-active: oklch(60% 0.16 175);
+  --graph-edge:        oklch(82% 0.012 270);
+
+  /* 위키링크 */
+  --wikilink:          oklch(54% 0.16 175);
+  --wikilink-stub:     oklch(68% 0.012 270);
+
+  /* Shadows — 따뜻한 톤 */
+  --shadow-sm:  0 1px 2px 0 oklch(20% 0.02 85 / 0.05);
+  --shadow:     0 4px 16px -4px oklch(20% 0.02 85 / 0.08), 0 2px 4px -2px oklch(20% 0.02 85 / 0.04);
+  --shadow-lg:  0 24px 48px -12px oklch(20% 0.02 85 / 0.18);
+  --shadow-glow: 0 0 0 1px oklch(60% 0.16 175 / 0.18), 0 8px 24px -4px oklch(60% 0.16 175 / 0.25);
+}
+
+/* 다크 모드 — html[data-theme="dark"] 일 때 적용.
+   inline script (layout.tsx) 가 시스템 설정 또는 사용자 선택을 읽어 data-theme 을 세팅한다. */
+:root[data-theme="dark"] {
+  --background:        oklch(13% 0.018 270);
+  --background-soft:   oklch(17% 0.02 270);
+  --background-mute:   oklch(21% 0.022 270);
+
+  --foreground:        oklch(95% 0.008 85);
+  --foreground-soft:   oklch(72% 0.014 85);
+  --foreground-mute:   oklch(55% 0.012 270);
+
+  --border:            oklch(24% 0.022 270);
+  --border-strong:     oklch(32% 0.025 270);
+
+  --accent:            oklch(78% 0.16 175);
+  --accent-hover:      oklch(85% 0.16 175);
+  --accent-soft:       oklch(28% 0.06 175);
+  --accent-fg:         oklch(13% 0.018 270);
+
+  --warm:              oklch(82% 0.14 60);
+  --warm-soft:         oklch(28% 0.06 60);
+
+  --grad-from:         oklch(78% 0.16 175);
+  --grad-via:          oklch(80% 0.15 145);
+  --grad-to:           oklch(82% 0.14 55);
+
+  --code-bg:           oklch(20% 0.02 270);
+  --code-fg:           oklch(88% 0.012 85);
+  --code-block-bg:     oklch(10% 0.015 270);
+  --code-block-fg:     oklch(94% 0.008 85);
+
+  --graph-node:        oklch(72% 0.014 85);
+  --graph-node-active: oklch(78% 0.16 175);
+  --graph-edge:        oklch(32% 0.022 270);
+
+  --wikilink:          oklch(82% 0.16 175);
+  --wikilink-stub:     oklch(50% 0.012 270);
+
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow:     0 8px 32px -8px rgb(0 0 0 / 0.5);
+  --shadow-lg:  0 32px 64px -16px rgb(0 0 0 / 0.6);
+  --shadow-glow: 0 0 0 1px oklch(78% 0.16 175 / 0.25), 0 12px 32px -8px oklch(78% 0.16 175 / 0.2);
+}
+
+@theme inline {
+  --color-background:         var(--background);
+  --color-background-soft:    var(--background-soft);
+  --color-background-mute:    var(--background-mute);
+  --color-foreground:         var(--foreground);
+  --color-foreground-soft:    var(--foreground-soft);
+  --color-foreground-mute:    var(--foreground-mute);
+
+  --color-border:             var(--border);
+  --color-border-strong:      var(--border-strong);
+
+  --color-accent:             var(--accent);
+  --color-accent-hover:       var(--accent-hover);
+  --color-accent-soft:        var(--accent-soft);
+  --color-accent-fg:          var(--accent-fg);
+
+  --color-warm:               var(--warm);
+  --color-warm-soft:          var(--warm-soft);
+
+  --color-code-bg:            var(--code-bg);
+  --color-code-fg:            var(--code-fg);
+  --color-code-block-bg:      var(--code-block-bg);
+  --color-code-block-fg:      var(--code-block-fg);
+
+  --color-wikilink:           var(--wikilink);
+  --color-wikilink-stub:      var(--wikilink-stub);
+
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+  --font-display: var(--font-display-stack);
+}
+
+:root {
+  --font-sans-stack:
+    "Pretendard Variable", Pretendard,
+    -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR",
+    "Helvetica Neue", Arial, sans-serif;
+
+  --font-display-stack:
+    "Pretendard Variable", Pretendard,
+    -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", system-ui, sans-serif;
+
+  --font-mono-stack:
+    "JetBrains Mono", "Fira Code",
+    ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans-stack);
+  font-feature-settings: "ss01", "ss02", "cv01", "tnum";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* 한국어 단어 단위 줄바꿈 — 단어 중간이 잘리지 않게.
+     overflow-wrap: normal 로 명시해 fallback 도 끔 (좁은 컨테이너에서도 한글 단어 보존).
+     긴 영문/URL 이 overflow 가능성이 있는 곳에는 개별적으로 break-words 유틸을 적용. */
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* ─────────────────────────────────────────────
+ * Background patterns
+ * ───────────────────────────────────────────── */
+
+/* 미세한 도트 그리드 — 그래프 메타포 */
+.bg-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--foreground) 8%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  background-position: 0 0;
+}
+
+:root[data-theme="dark"] .bg-dot-grid {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--foreground) 12%, transparent) 1px,
+    transparent 1px
+  );
+}
+
+/* Mesh gradient orb — Hero 백그라운드 */
+.bg-mesh-orb {
+  background:
+    radial-gradient(60% 60% at 80% 0%, color-mix(in oklch, var(--accent) 22%, transparent), transparent 60%),
+    radial-gradient(50% 50% at 0% 30%, color-mix(in oklch, var(--warm) 18%, transparent), transparent 60%),
+    radial-gradient(40% 40% at 50% 100%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%);
+}
+
+/* ─────────────────────────────────────────────
+ * Typography utilities
+ * ───────────────────────────────────────────── */
+
+.text-display {
+  font-family: var(--font-display-stack);
+  letter-spacing: -0.025em;
+  font-feature-settings: "ss01", "cv01", "tnum";
+}
+
+.text-gradient {
+  background: linear-gradient(110deg, var(--grad-from), var(--grad-via) 45%, var(--grad-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ─────────────────────────────────────────────
+ * 학습 본문 (.prose-study)
+ * ───────────────────────────────────────────── */
+
+.prose-study {
+  line-height: 1.8;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  color: var(--foreground-soft);
+}
+.prose-study :where(h1, h2, h3, h4) {
+  color: var(--foreground);
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  scroll-margin-top: 5rem;
+}
+.prose-study :where(p, ul, ol, blockquote) {
+  margin-block: 1em;
+}
+.prose-study :where(a) {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklch, var(--accent) 35%, transparent);
+  transition: border-color 0.15s;
+}
+.prose-study :where(a:hover) { border-bottom-color: var(--accent); }
+.prose-study :where(strong) { color: var(--foreground); font-weight: 600; }
+.prose-study :where(code:not(pre code)) {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 0.15em 0.4em;
+  border-radius: 0.4rem;
+  font-size: 0.88em;
+  font-family: var(--font-mono-stack);
+}
+.prose-study :where(pre) {
+  background: var(--code-block-bg);
+  color: var(--code-block-fg);
+  padding: 1.1rem 1.2rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  border: 1px solid color-mix(in oklch, var(--foreground) 8%, transparent);
+}
+.prose-study :where(blockquote) {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.1rem;
+  color: var(--foreground-soft);
+  font-style: normal;
+}
+
+/* 표 — GFM. 학습 노트의 비교/정리 표가 자주 등장. */
+.prose-study :where(table) {
+  border-collapse: collapse;
+  width: 100%;
+  margin-block: 1.4em;
+  font-size: 0.93em;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.prose-study :where(thead) {
+  background: var(--background-soft);
+  border-bottom: 1px solid var(--border-strong);
+}
+.prose-study :where(th) {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.65rem 0.9rem;
+  color: var(--foreground);
+}
+.prose-study :where(td) {
+  padding: 0.6rem 0.9rem;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+.prose-study :where(tbody tr:hover) {
+  background: color-mix(in oklch, var(--background-soft) 60%, transparent);
+}
+
+/* 셀 안 코드/링크는 그대로 */
+.prose-study :where(td code:not(pre code)),
+.prose-study :where(th code:not(pre code)) {
+  font-size: 0.88em;
+}
+
+/* 가로 스크롤 안전망 — 좁은 화면 */
+.prose-study :where(table) {
+  display: block;
+  overflow-x: auto;
+}
+
+/* ─────────────────────────────────────────────
+ * Shiki — 듀얼 테마 (vitesse-light / vitesse-dark)
+ *  - 기본: light 변수 활성 (인라인 style 그대로)
+ *  - data-theme="dark" 일 때 모든 코드 블록에 --shiki-dark-* 변수로 스왑
+ * ───────────────────────────────────────────── */
+
+.prose-study :where(.shiki) {
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.2rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  border: 1px solid color-mix(in oklch, var(--foreground) 10%, transparent);
+}
+.prose-study :where(.shiki) code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+  font-family: var(--font-mono-stack);
+}
+
+/* 명시적 dark 선택. */
+html[data-theme="dark"] .shiki,
+html[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* OS 시스템이 dark 인데 사용자가 명시적 모드를 안 골랐을 때도 같이 적용.
+   (theme-init 스크립트가 못 도는 비정상 상황 대비 안전망) */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .shiki,
+  html:not([data-theme="light"]) .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+ * 위키링크
+ * ───────────────────────────────────────────── */
+
+.wikilink {
+  color: var(--wikilink);
+  text-decoration: none;
+  border-bottom: 1px dashed color-mix(in oklch, var(--wikilink) 50%, transparent);
+  padding-bottom: 1px;
+  transition: border-bottom-style 0.15s, color 0.15s;
+}
+.wikilink:hover {
+  border-bottom-style: solid;
+  border-bottom-color: var(--wikilink);
+}
+
+.wikilink--stub {
+  color: var(--wikilink-stub);
+  border-bottom-color: color-mix(in oklch, var(--wikilink-stub) 60%, transparent);
+  cursor: help;
+}
+
+/* ─────────────────────────────────────────────
+ * 미세 인터랙션
+ * ───────────────────────────────────────────── */
+
+.lift-on-hover {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.15s;
+}
+.lift-on-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.arrow-shift {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.group:hover .arrow-shift,
+a:hover .arrow-shift,
+button:hover .arrow-shift {
+  transform: translateX(3px);
+}
+
+/* 그래프 모티프 — Hero 뒤에 깔리는 SVG 노드 펄스 */
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+.graph-node-anim {
+  animation: node-pulse 3.6s ease-in-out infinite;
+}
+
+/* 선택 영역 */
+::selection {
+  background: var(--accent-soft);
+  color: var(--foreground);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
