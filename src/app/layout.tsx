@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
 import './globals.css';
 
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -7,7 +6,8 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 import { env } from '@/lib/env';
 
 // FOUC 방지 — React 하이드레이션 전에 data-theme 을 세팅한다.
-// `next/script` + `beforeInteractive` 가 Next.js 16 에서 권장되는 inline script 주입 방식.
+// Next.js 16 / React 19 에서는 `<Script>` 가 body 안에서 동작 안 함 →
+// 일반 inline `<script>` 를 <head> 에 넣는 것이 표준 패턴 (theme 토글에서 가장 흔한 방법).
 const THEME_INIT = `(function(){try{var t=localStorage.getItem('theme');var s=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var r=t==='light'||t==='dark'?t:s;document.documentElement.setAttribute('data-theme',r);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 // Pretendard Variable — 한국어 가독성 + 디스플레이 weight 확보.
@@ -68,11 +68,30 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link rel="stylesheet" href={PRETENDARD_HREF} />
+        {/* FOUC 방지 — head 안에 inline 으로 넣어야 React 하이드레이션 전에 실행됨. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+        {/* WebSite + SearchAction JSON-LD — 사이트 전역. head 안에 두어 React 19 경고 회피. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: '손수레 (Sonsurae)',
+              url: env.siteUrl,
+              description:
+                'Learning in public — 한 수레씩 옮겨 담는 어느 개발자의 학습 노트.',
+              inLanguage: 'ko',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: `${env.siteUrl}/search?q={query}`,
+                'query-input': 'required name=query',
+              },
+            }),
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Script id="theme-init" strategy="beforeInteractive">
-          {THEME_INIT}
-        </Script>
         <SiteHeader />
         <main className="flex-1 w-full">{children}</main>
         <SiteFooter />

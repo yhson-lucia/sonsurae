@@ -8,7 +8,6 @@ import { CategoryBreadcrumb } from '@/components/post/CategoryBreadcrumb';
 import { FolderTree } from '@/components/layout/FolderTree';
 import { PostCard } from '@/components/post/PostCard';
 import {
-  getAllCategories,
   getCategoryBySlug,
   getCategoryTree,
   getPostsByCategorySlug,
@@ -18,14 +17,14 @@ interface PageProps {
   params: Promise<{ slug: string[] }>;
 }
 
-export async function generateStaticParams() {
-  return getAllCategories().map((c) => ({ slug: c.slug.split('/') }));
-}
+// generateStaticParams 는 cookies() 를 쓸 수 없어 제거.
+// 대신 ISR — 60 초마다 재생성.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const slugStr = slug.join('/');
-  const cat = getCategoryBySlug(slugStr);
+  const cat = await getCategoryBySlug(slugStr);
   if (!cat) return { title: '카테고리를 찾을 수 없음' };
   return {
     title: cat.name,
@@ -36,11 +35,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const slugStr = slug.join('/');
-  const category = getCategoryBySlug(slugStr);
+  const category = await getCategoryBySlug(slugStr);
   if (!category) notFound();
 
-  const posts = getPostsByCategorySlug(slugStr);
-  const tree = getCategoryTree();
+  const [posts, tree] = await Promise.all([
+    getPostsByCategorySlug(slugStr),
+    getCategoryTree(),
+  ]);
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">

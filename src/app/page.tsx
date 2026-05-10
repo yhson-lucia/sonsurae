@@ -192,8 +192,8 @@ export default function HomePage() {
   );
 }
 
-function FootprintsSection() {
-  const posts = getRecentPosts(8);
+async function FootprintsSection() {
+  const posts = await getRecentPosts(8);
 
   return (
     <section

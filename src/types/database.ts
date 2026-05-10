@@ -82,6 +82,45 @@ export interface PostTag {
   tag_id: string;
 }
 
+export type ProjectStatus = '진행중' | '완료' | '중단';
+
+export interface Project {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string | null;
+  body_md: string;
+  cover_image_url: string | null;
+  status: ProjectStatus;
+  period_start: string | null;     // YYYY-MM-DD
+  period_end: string | null;       // null = 진행 중
+  stack: string[];
+  repo_url: string | null;
+  demo_url: string | null;
+  author_id: string;
+  published: boolean;
+  published_at: string | null;
+  sort_order: number;
+  imported_from: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectListItem
+  extends Pick<
+    Project,
+    | 'id'
+    | 'slug'
+    | 'name'
+    | 'summary'
+    | 'cover_image_url'
+    | 'status'
+    | 'period_start'
+    | 'period_end'
+    | 'stack'
+    | 'published_at'
+  > {}
+
 // ============================================================
 // 조회용 합성 타입 (API 응답에서 자주 쓰일 모양)
 // ============================================================

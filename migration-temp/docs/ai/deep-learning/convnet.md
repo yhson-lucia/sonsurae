@@ -1,4 +1,14 @@
-***
+---
+title: ConvNet
+slug: convnet
+category: ai/deep-learning
+summary: CNN의 Convolution/Padding/Stride/Pooling, 출력 크기 공식, 파라미터 공유, LeNet/AlexNet/VGG/ResNet 아키텍처
+tags: [ai, deep-learning, cnn, convolution, pooling, padding, stride, alexnet, resnet]
+sort_order: 12
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 1. Convolutional Neural Network란?
 
 - **CNN (Convolutional Neural Network)**

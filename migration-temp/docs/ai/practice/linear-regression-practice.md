@@ -1,3 +1,14 @@
+---
+title: Linear Regression 실습
+slug: linear-regression-practice
+category: ai/practice
+summary: PyTorch nn.Linear 사용한 선형 회귀, MSE 손실, SGD 옵티마이저, 학습 루프, 다중 가중치 처리
+tags: [ai, practice, linear-regression, pytorch, sgd, mse, gradient-descent]
+sort_order: 1
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 0. 전체 코드 예시
 
 - **선형 회귀 실습 코드**

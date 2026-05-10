@@ -27,7 +27,7 @@
 
 ## 📂 사례 목록
 
-_아직 기록된 사례 없음. 새 버그 만나면 아래 템플릿 따라 추가하세요._
+- [next-image-supabase-storage.md](./next-image-supabase-storage.md) — 마이그레이션 직후 카테고리 페이지 500. `next/image` 가 Supabase Storage 호스트를 화이트리스트 못 받아 발생.
 
 | 사례 | 발생일 | 영역 |
 |------|--------|------|

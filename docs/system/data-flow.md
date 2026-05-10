@@ -24,6 +24,30 @@ categories ── self-ref ──┐
                                   ▲ 위키링크 자동 동기화
 ```
 
+## ⚠️ 필드 시맨틱 — 마크다운 vs 평문
+
+**같은 글의 텍스트 필드라도 처리 경로가 다르다. 헷갈리면 사이트가 깨진다.**
+
+| 필드 | 처리 경로 | 위키링크 / 코드 / 수식 | 용도 |
+|------|----------|------------------------|------|
+| `posts.body_md` | `MarkdownRenderer` (preprocessMarkdown + react-markdown + plugins) | ✅ 모두 처리 | 글 본문 |
+| `posts.title` | `<h1>{title}</h1>` 평문 | ❌ | 제목 |
+| `posts.excerpt` | `<p>{excerpt}</p>` 평문 | ❌ | 요약, OG description, 카드 미리보기 |
+| `posts.cover_image_url` | `<Image src={url}>` URL | — | 대표 이미지 |
+| `categories.description` | `<p>{description}</p>` 평문 | ❌ | 카테고리 페이지 헤더 |
+| `categories.name` | 평문 | ❌ | 표시명 |
+| `tags.name` | 평문 | ❌ | 태그 표시 |
+
+### 작성 룰
+- **위키링크 `[[slug]]`, 코드, 수식, 표 → `body_md` 에만**.
+- 다른 필드(특히 `excerpt`)에 `[[...]]` 를 쓰면 화면에 6글자 그대로 노출된다 (React 문자열 보간은 escape 만 함).
+- excerpt 는 OG meta description / 카드 / 검색 미리보기에서 평문으로 노출되므로 마크다운 토큰이 들어가면 미관·SEO 모두 손해.
+
+### Phase 5 강제
+`createPost` / `updatePost` Server Action 에서 `excerpt` 가 `[[`/`]]` 를 포함하면 거부 (validation 에러).
+
+---
+
 ## 테이블 정의 요약
 
 `supabase/migrations/0001_init_schema.sql` 참조. 핵심:
@@ -125,11 +149,19 @@ where exists (select 1 from posts p where p.id = pl.from_post_id and p.published
 
 `.env.local` 항목은 [integrations.md](./integrations.md) 참고.
 
-## 마이그레이션 순서 (Phase 7)
-1. Supabase 프로젝트 생성 → URL/anon/service-role 키를 `.env.local` 에
-2. `supabase db push` 또는 SQL Editor 에서 0001 → 0002 → seed 순서 실행
-3. `scripts/import-from-migration-temp.ts` 실행 (service-role 사용)
-   - `migration-temp/_meta/*.md` → `categories` 채움
-   - `migration-temp/docs/**/*.md` → `posts` 채움
-   - `migration-temp/images/**` → Storage 업로드 + `images` 행 생성
-   - 본문에서 위키링크 파싱 (이 단계에는 거의 비어 있을 것 — 마이그 후 작성자가 손으로 채움)
+## 마이그레이션 절차 (실행 완료)
+
+### 실제 실행된 순서
+1. Supabase 프로젝트 생성 → URL/anon/service-role 키 → `.env.local`
+2. SQL Editor 에서 `0001 → 0002 → 0003 → seed.sql` 순서 실행
+3. `node --env-file=.env.local scripts/migrate-from-my-website.mjs` 실행
+   - 카테고리 20개 시드 (seed.sql 이 처리)
+   - `migration-temp/docs/**/*.md` → **93개 posts** 임포트
+   - `migration-temp/images/**` → Storage `images` 버킷 업로드 + **131개 images 행**
+   - 글은 기본 `published=false` 로 들어감 (`--published=true` 플래그로 자동 발행 가능)
+4. `next.config.ts` 의 `images.remotePatterns` 에 `*.supabase.co` 등록 (next/image 가 Storage URL 사용)
+
+### 마이그 직후 후속 작업
+- **일괄 발행**: 검수 없이 모두 노출하려면 `update posts set published=true where published=false`
+- **위키링크 채우기**: 마이그된 본문에는 `[[...]]` 가 거의 없음 — 작성자가 글을 다시 들여다보며 추가. 추가될 때마다 그래프 (post_links) 가 자동 동기화됨 (Server Action `updatePost`).
+- **post_links 일괄 자동 채움 (선택)**: 글 제목 기준 매칭 휴리스틱으로 후처리 스크립트 작성 가능 (Phase 6 polish 항목, 정확도 70% 수준).

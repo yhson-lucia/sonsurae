@@ -9,8 +9,11 @@ import { notFound } from 'next/navigation';
 import { BacklinksPanel } from '@/components/post/BacklinksPanel';
 import { CategoryBreadcrumb } from '@/components/post/CategoryBreadcrumb';
 import { MarkdownRenderer } from '@/components/markdown/MarkdownRenderer';
+import { MiniGraph } from '@/components/post/MiniGraph';
+import { env } from '@/lib/env';
 import { formatPublishedDate } from '@/lib/format';
 import {
+  getAllCategories,
   getAllPublishedPosts,
   getBacklinksTo,
   getKnownSlugs,
@@ -22,13 +25,13 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return getAllPublishedPosts().map((p) => ({ slug: p.slug }));
-}
+// generateStaticParams 는 cookies() 를 쓸 수 없어 제거.
+// 대신 ISR — 60 초마다 재생성.
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: '찾을 수 없는 글' };
   return {
     title: post.title,
@@ -44,15 +47,65 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const backlinks = getBacklinksTo(post.slug);
-  const outgoingLinks = getOutgoingLinksFrom(post.slug);
-  const knownSlugs = getKnownSlugs();
+  const [backlinks, outgoingLinks, knownSlugs, allPosts, allCategories] = await Promise.all([
+    getBacklinksTo(post.slug),
+    getOutgoingLinksFrom(post.slug),
+    getKnownSlugs(),
+    getAllPublishedPosts(),
+    getAllCategories(),
+  ]);
+
+  // JSON-LD — TechArticle + BreadcrumbList. 학습/기술 글이라 TechArticle 사용.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TechArticle',
+        headline: post.title,
+        description: post.excerpt ?? undefined,
+        image: post.cover_image_url ?? undefined,
+        datePublished: post.published_at,
+        dateModified: post.published_at,
+        inLanguage: 'ko',
+        author: { '@type': 'Person', name: '손수레' },
+        publisher: {
+          '@type': 'Organization',
+          name: '손수레',
+        },
+        articleSection: post.category.name,
+        mainEntityOfPage: `${env.siteUrl}/posts/${post.slug}`,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: '홈', item: env.siteUrl },
+          ...post.category.slug.split('/').map((seg, i, arr) => ({
+            '@type': 'ListItem',
+            position: i + 2,
+            name: seg,
+            item: `${env.siteUrl}/category/${arr.slice(0, i + 1).join('/')}`,
+          })),
+          {
+            '@type': 'ListItem',
+            position: post.category.slug.split('/').length + 2,
+            name: post.title,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      {/* JSON-LD — non-executing data island, no Next/Script needed */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Header */}
       <header className="border-b border-border pb-8">
         <CategoryBreadcrumb slug={post.category.slug} />
@@ -78,6 +131,9 @@ export default async function PostPage({ params }: PageProps) {
 
       {/* Backlinks + outgoing */}
       <BacklinksPanel backlinks={backlinks} outgoingLinks={outgoingLinks} />
+
+      {/* Mini graph — 1-hop 이웃 */}
+      <MiniGraph posts={allPosts} centerSlug={post.slug} categories={allCategories} />
     </article>
   );
 }

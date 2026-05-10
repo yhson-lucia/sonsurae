@@ -20,10 +20,25 @@
 - `src/lib/supabase/server.ts` — Server Components / Route Handlers / Server Actions. 쿠키 통합.
 - `src/lib/supabase/browser.ts` — Client Components 전용. 싱글턴.
 - `src/lib/supabase/admin.ts` — Service Role. 마이그레이션 / 어드민 스크립트 전용. RLS 우회.
+- `src/lib/supabase/middleware.ts` — `/admin/*` 인증 게이트 (`src/proxy.ts` 가 호출).
+
+### Next 16 — middleware → proxy
+Next.js 16 부터 `middleware.ts` 가 **`proxy.ts`** 로 rename 됨. 함수 이름도 `middleware` → `proxy`.
+손수레는 `src/proxy.ts` 를 사용하며, `/admin/:path*` 매처에만 인증 검사를 건다.
+
+### next/image 호스트 화이트리스트
+Storage 공개 URL 을 `<Image>` 에서 쓰려면 `next.config.ts` 에 등록 필수:
+```ts
+images: {
+  remotePatterns: [
+    { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/**' },
+  ],
+}
+```
+미등록 시 카테고리/글 페이지가 500 으로 떨어진다 (cover_image_url 있는 카드가 렌더 안 됨).
 
 ### 가드
-`src/lib/env.ts` 에서 `hasSupabase`, `assertSupabase()` 제공.
-환경 변수가 없는 phase 1~6 동안에도 빌드 / 정적 페이지 렌더가 깨지지 않도록 lazy 로 처리.
+`src/lib/env.ts` 의 `hasSupabase`, `assertSupabase()` — 환경 변수 없을 때 lazy 에러로 페이지 빌드 자체는 깨지지 않게.
 
 ## Vercel
 - **역할**: 호스팅 + Edge / Serverless 런타임 + Image Optimization.

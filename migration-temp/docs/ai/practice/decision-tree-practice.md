@@ -1,4 +1,13 @@
-# Decision Tree 직접 구현
+---
+title: Decision Tree 직접 구현
+slug: decision-tree-practice
+category: ai/practice
+summary: 라이브러리 없이 Decision Tree 직접 구현 — Node 클래스, Gini Index, Information Gain, 최적 분할점, 재귀 트리 구축
+tags: [ai, practice, decision-tree, gini, information-gain, from-scratch]
+sort_order: 6
+created: 2025-04-26
+updated: 2026-05-10
+---
 
 ## 1. 개요
 

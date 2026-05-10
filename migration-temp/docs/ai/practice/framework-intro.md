@@ -1,6 +1,15 @@
-# Scikit-learn 프레임워크
+---
+title: Scikit-learn 프레임워크
+slug: framework-intro
+category: ai/practice
+summary: Scikit-learn 기본 구조(Estimator, fit/predict), 주요 모듈, train_test_split, K-Fold 교차 검증, 데이터 인코딩, Feature Scaling
+tags: [ai, ml, scikit-learn, framework, preprocessing, cross-validation, k-fold]
+sort_order: 0
+created: 2025-04-26
+updated: 2026-05-10
+---
 
-Scikit-learn은 Python 기반의 머신러닝 라이브러리로, 지도학습과 비지도학습을 위한 다양한 알고리즘과 도구를 제공한다. 일관된 API 구조를 통해 모든 알고리즘을 동일한 방식으로 사용할 수 있다.
+Scikit-learn은 Python 기반의 머신러닝 라이브러리로, 지도학습과 비지도학습을 위한 다양한 알고리즘과 도구를 제공함. 일관된 API 구조를 통해 모든 알고리즘을 동일한 방식으로 사용할 수 있음.
 
 ***
 

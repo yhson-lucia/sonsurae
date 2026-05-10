@@ -1,6 +1,13 @@
-# Overfitting과 해결 방법
-
-***
+---
+title: Overfitting
+slug: overfitting
+category: ai/deep-learning
+summary: Overfitting의 원인, L1/L2 Regularization, Dropout, Ensemble, Early Stopping, Data Augmentation
+tags: [ai, deep-learning, overfitting, regularization, dropout, ensemble, early-stopping]
+sort_order: 11
+created: 2025-04-26
+updated: 2026-05-10
+---
 
 ## 1. Overfitting (과적합)이란?
 

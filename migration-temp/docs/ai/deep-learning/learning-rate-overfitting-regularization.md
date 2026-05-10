@@ -1,4 +1,14 @@
-***
+---
+title: Learning Rate, Overfitting, Regularization
+slug: learning-rate-overfitting-regularization
+category: ai/deep-learning
+summary: Learning Rate 설정, 데이터 정규화(Standardization/Min-Max), Overfitting 진단·해결, L1/L2/Dropout, LR 스케줄러
+tags: [ai, deep-learning, learning-rate, normalization, overfitting, regularization, dropout, lr-scheduler]
+sort_order: 7
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 1. Learning Rate (학습률)
 
 ### 1.1 Learning Rate의 역할

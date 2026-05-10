@@ -1,6 +1,13 @@
-# Weight 초기화 (Weight Initialization)
-
-***
+---
+title: Weight 초기화
+slug: weight-initialization
+category: ai/deep-learning
+summary: 가중치 초기화의 중요성, RBM 사전학습, Xavier/Glorot 초기화 (2010), He/Kaiming 초기화 (2015), 활성화 함수별 권장 초기화
+tags: [ai, deep-learning, weight-initialization, xavier, he-init, kaiming, rbm]
+sort_order: 10
+created: 2025-04-26
+updated: 2026-05-10
+---
 
 ## 1. Weight 초기화의 중요성
 
@@ -193,11 +200,17 @@ for epoch in range(epochs):
 
 ### 수식
 
-**Xavier Normal 초기화:**
-$$W \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n_{\text{in}} + n_{\text{out}}}}\right)$$
+> **표기 안내**: 아래 정규분포 $\mathcal{N}(\mu, \sigma)$는 **(평균, 표준편차)** 표기. (통계학에서 자주 쓰는 $\mathcal{N}(\mu, \sigma^2)$ 표기와 다름.) PyTorch의 `xavier_normal_`도 표준편차 기준이라 혼동 없음.
 
-**Xavier Uniform 초기화:**
-$$W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{\text{in}} + n_{\text{out}}}}, \sqrt{\frac{6}{n_{\text{in}} + n_{\text{out}}}}\right)$$
+**Xavier Normal 초기화** (표준편차)
+
+$$W \sim \mathcal{N}\left(0, \;\sigma\right), \quad \sigma = \sqrt{\frac{2}{n_{\text{in}} + n_{\text{out}}}}$$
+
+→ 분산으로 표기하면: $\text{Var}(W) = \dfrac{2}{n_{\text{in}} + n_{\text{out}}}$
+
+**Xavier Uniform 초기화**
+
+$$W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{\text{in}} + n_{\text{out}}}}, \;\sqrt{\frac{6}{n_{\text{in}} + n_{\text{out}}}}\right)$$
 
 여기서:
 - $n_{\text{in}}$ = fan_in (입력 노드 수)
@@ -257,11 +270,15 @@ nn.init.xavier_normal_(model[0].weight)
 
 ### 수식
 
-**He Normal 초기화:**
-$$W \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n_{\text{in}}}}\right)$$
+**He Normal 초기화** (표준편차)
 
-**He Uniform 초기화:**
-$$W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{\text{in}}}}, \sqrt{\frac{6}{n_{\text{in}}}}\right)$$
+$$W \sim \mathcal{N}\left(0, \;\sigma\right), \quad \sigma = \sqrt{\frac{2}{n_{\text{in}}}}$$
+
+→ 분산으로 표기하면: $\text{Var}(W) = \dfrac{2}{n_{\text{in}}}$
+
+**He Uniform 초기화**
+
+$$W \sim \mathcal{U}\left(-\sqrt{\frac{6}{n_{\text{in}}}}, \;\sqrt{\frac{6}{n_{\text{in}}}}\right)$$
 
 여기서:
 - $n_{\text{in}}$ = fan_in (입력 노드 수만 사용)

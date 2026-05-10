@@ -1,3 +1,14 @@
+---
+title: Logistic Regression 실습
+slug: logistic-regression-practice
+category: ai/practice
+summary: PyTorch 로지스틱 회귀 구현, Sigmoid + BCELoss, BCEWithLogitsLoss, 분류 정확도 평가
+tags: [ai, practice, logistic-regression, pytorch, sigmoid, bce, binary-classification]
+sort_order: 3
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 0. 전체 코드 예시 - 기본
 
 - **로지스틱 회귀 실습 코드**

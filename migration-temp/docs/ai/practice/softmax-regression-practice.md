@@ -1,3 +1,14 @@
+---
+title: Softmax Regression 실습
+slug: softmax-regression-practice
+category: ai/practice
+summary: PyTorch Softmax 회귀 구현, 동물원 데이터셋 7개 클래스 분류, One-Hot Encoding, Cross-Entropy 수동/CrossEntropyLoss
+tags: [ai, practice, softmax, multi-class-classification, pytorch, one-hot, cross-entropy]
+sort_order: 4
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 0. 전체 코드 예시
 
 - **Softmax 회귀 실습 코드**

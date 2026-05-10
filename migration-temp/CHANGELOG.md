@@ -1307,3 +1307,183 @@
 - Dying ReLU 문제 정확
 - 활성화 함수 비교 표 (출력 범위, Vanishing Gradient, 계산 비용) — 모두 정확
 - 사용 가이드 (은닉층 ReLU, 출력층 Sigmoid/Softmax/Linear) — 표준과 일치
+
+---
+
+## Batch 11 — 2026-05-10 (DL 나머지 4개)
+
+> **검증 강화 모드**. 사실/수식 오류 없음. weight-initialization에 표기 안내 1건 보강.
+
+### `docs/ai/deep-learning/convnet.md`
+**frontmatter**: title=ConvNet, sort_order=12, tags=[ai, deep-learning, cnn, convolution, pooling, padding, stride, alexnet, resnet]
+
+**검증 결과 ✅**
+- 출력 크기 공식 $(N-F)/\text{Stride} + 1$ — 정확
+- Same Padding $P = (F-1)/2$ — 정확
+- LeNet-5 (1998), AlexNet (2012), VGGNet (2014), ResNet (2015) — 모두 정확
+- 파라미터 수 계산 $5 \times 5 \times 3 + 1 = 76$ — 정확
+- ResNet 152층 — 정확 (논문에서 152, 1202까지 실험)
+- VGG 3×3 필터 반복 — 정확
+
+---
+
+### `docs/ai/deep-learning/overfitting.md`
+**frontmatter**: title=Overfitting, sort_order=11, tags=[ai, deep-learning, overfitting, regularization, dropout, ensemble, early-stopping]
+
+**검증 결과 ✅**
+- L2 Regularization $\lambda \sum w_i^2$ — 정확
+- L1 Regularization $\lambda \sum |w_i|$ — 정확
+- L1이 Sparse, L2가 Dense — 정확
+- PyTorch `weight_decay` = L2 — 정확
+- Dropout train/eval 모드 차이 정확
+- Ensemble 평균/투표/가중평균 정확
+
+---
+
+### `docs/ai/deep-learning/weight-initialization.md` ⚠️
+**frontmatter**: title=Weight 초기화, sort_order=10, tags=[ai, deep-learning, weight-initialization, xavier, he-init, kaiming, rbm]
+
+**⚠️ 표기 안내 보강**
+- 원본은 $W \sim \mathcal{N}(0, \sqrt{2/(n_{in}+n_{out})})$ 같은 형태로 표기
+- $\mathcal{N}$의 두 번째 인자가 표준편차인지 분산인지 모호 (통계학 표준 $\mathcal{N}(\mu, \sigma^2)$ vs PyTorch 표준 (mean, std))
+- **본문에 표기 안내 인용 블록 추가**: "**(평균, 표준편차)** 표기. PyTorch와 동일"
+- 분산으로 표기한 형태 $\text{Var}(W) = \dfrac{2}{n_{\text{in}} + n_{\text{out}}}$ 도 함께 명시
+
+**검증 결과 ✅**
+- Glorot & Bengio 2010 (Xavier) — 정확
+- He et al. 2015 (Kaiming) — 정확. 논문 제목 "Delving Deep into Rectifiers" 정확
+- Xavier 분산 $2/(n_{in}+n_{out})$, He 분산 $2/n_{in}$ — 정확
+- He = Xavier × √2 (ReLU의 음수 0 처리 보정) — 정확
+- Sigmoid/Tanh → Xavier, ReLU 계열 → He — 정확
+- PyTorch Linear 기본 초기화: Kaiming Uniform — 정확
+- Bias 0 초기화 권장 — 정확
+
+---
+
+### `docs/ai/deep-learning/learning-rate-overfitting-regularization.md`
+**frontmatter**: title=Learning Rate, Overfitting, Regularization, sort_order=7, tags=[ai, deep-learning, learning-rate, normalization, overfitting, regularization, dropout, lr-scheduler]
+
+**검증 결과 ✅**
+- LR 권장값 (0.1, 0.01, 0.001, 0.0001) 표준 범위
+- Standardization $x' = (x - \mu)/\sigma$ — 정확
+- Min-Max $x' = (x - \min)/(\max - \min)$ — 정확
+- 학습/테스트 데이터에 **동일한 통계량** 적용 (data leakage 방지) — 매우 중요한 포인트, 정확
+- Early Stopping with patience — 정확
+- LR Scheduler (StepLR, ExponentialLR, ReduceLROnPlateau, CosineAnnealingLR) — 정확
+- Elastic Net (L1 + L2) — 정확
+
+---
+
+## Batch 12 — 2026-05-10 (Practice 7개) — **마지막 묶음**
+
+> **검증 강화 모드**. 7개 모두 코드 위주 실습 자료. 사실/수식 오류 없음. frontmatter만 추가.
+
+### `docs/ai/practice/framework-intro.md`
+**frontmatter**: title=Scikit-learn 프레임워크, sort_order=0
+
+**검증 결과 ✅** Estimator API, train_test_split, K-Fold, Stratified K-Fold, Standardization/MinMax 모두 정확
+
+---
+
+### `docs/ai/practice/linear-regression-practice.md`
+**frontmatter**: title=Linear Regression 실습, sort_order=1
+
+**검증 결과 ✅** PyTorch nn.Linear, MSELoss, SGD, optimizer.zero_grad/backward/step 흐름 정확
+
+---
+
+### `docs/ai/practice/multi-variable-linear-regression-practice.md`
+**frontmatter**: title=Multi-variable Linear Regression 실습, sort_order=2
+
+**검증 결과 ✅** 행렬 연산, NumPy ↔ PyTorch (`from_numpy` 메모리 공유 vs `torch.tensor` 복사), CSV 데이터 로딩 모두 정확
+
+---
+
+### `docs/ai/practice/logistic-regression-practice.md`
+**frontmatter**: title=Logistic Regression 실습, sort_order=3
+
+**검증 결과 ✅** Sigmoid + BCELoss 흐름, BCEWithLogitsLoss 권장 정확
+
+---
+
+### `docs/ai/practice/softmax-regression-practice.md`
+**frontmatter**: title=Softmax Regression 실습, sort_order=4
+
+**검증 결과 ✅** 동물원 데이터셋 7클래스, One-Hot, Cross-Entropy 수동 계산 정확
+
+---
+
+### `docs/ai/practice/xor-gate-practice.md`
+**frontmatter**: title=XOR Gate 구현 실습, sort_order=5
+
+**검증 결과 ✅**
+- 단층 실패 시 cost 0.69314 = $-\log(0.5) \approx 0.6931$ — 정확 (BCE의 무지 상태)
+- 다층 성공 (cost ~0.005) — 정확
+- Wide vs Deep 비교 표 정확
+- BCEWithLogitsLoss + Adam 권장 코드 정확
+
+---
+
+### `docs/ai/practice/decision-tree-practice.md`
+**frontmatter**: title=Decision Tree 직접 구현, sort_order=6
+
+**검증 결과 ✅** Node 클래스, Gini Index, Information Gain, 재귀 트리 구축 — 표준 알고리즘과 일치
+
+---
+
+# 🎉 마이그레이션 정리 작업 완료
+
+## 최종 통계
+
+- **전체 파일 수**: 93개
+- **완료**: 93개 (100%)
+- **총 정리 묶음**: 12 batches
+- **CHANGELOG 라인 수**: 1000+ 줄
+
+## 카테고리별 완료
+
+| 카테고리 | 파일 수 | 완료 일자 |
+|---|---|---|
+| Network | 7 | Batch 1, 5 |
+| AWS | 3 | Batch 1 |
+| FE (React, HTML/CSS/JS) | 12 | Batch 1, 7 |
+| Spring + JDBC + JPA | 16 | Batch 2, 3 |
+| Java | 4 | Batch 3 |
+| Docker | 3 | Batch 4 |
+| Database | 10 | Batch 4 |
+| OS | 9 | Batch 6 |
+| AI/Machine Learning | 9 | Batch 8a, 8b |
+| AI/Deep Learning | 12 | Batch 9, 10, 11 |
+| AI/Practice | 7 | Batch 12 |
+
+## 발견·정정한 주요 오류 종합
+
+| Batch | 파일 | 정정 내용 |
+|---|---|---|
+| 2 | jwt.md | **24시간 시간 버그** ($\times 1000$ 누락) |
+| 3 | jpa/proxy.md | **`PersistenceUnit.isLoaded` API 시그니처 정정** |
+| 4 | sql-multi-table.md | **자기조인 `RIGHT JOIN user→rental`** |
+| 4 | set-operators-hierarchical.md | **`CONNECT_BY_ISLEF→ISLEAF`** Oracle 키워드 |
+| 5 | network-layer.md | **IPv6 64bit→128bit** 정정 |
+| 5 | link-layer.md | **`address relation→Address Resolution Protocol`** |
+| 7 | dom-and-event.md | **`getElementsById→getElementById`** DOM API |
+| 7 | animated-website.md | **`infinity→infinite`** CSS 키워드 |
+| 7 | execution-context.md | 다수 코드 문법 오류 (`Math.min{`, `recerStr` 등) |
+| 9 | neural-network-training.md | **SSE 변수 표기 혼동 정정** |
+| 9 | backpropagation.md | **`mul_apple_layer→mul_orange_layer` 코드 버그** |
+| 11 | weight-initialization.md | **Xavier/He 표기 안내** (표준편차 vs 분산) 보강
+
+## 보강 (원본에 없지만 학습에 도움)
+
+- Batch 1: react.md에 Vue/Svelte 추가
+- Batch 1: aws-lambda.md에 Keep-Alive 명시
+- Batch 6: virtual-memory.md에 **Belady's anomaly** 표준 용어 추가
+- Batch 8a~11: ML/DL 표준 용어 (Mitchell, Quinlan, Friedman, He, Glorot 등) 출처 명시
+
+## 다음 단계
+
+1. **이미지 폴더 정리 확인** (140개 / 126 + 5 lambda 추가 = 131개 사용)
+2. **DB 스키마 설계** → posts 테이블, categories 테이블 등
+3. **SQL 시드 파일 생성** (frontmatter 기반)
+4. **Storage 업로드 스크립트**
+5. 마이그레이션 완료 후 `migration-temp/` 폴더 삭제

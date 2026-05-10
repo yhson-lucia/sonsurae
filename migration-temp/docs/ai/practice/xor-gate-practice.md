@@ -1,6 +1,13 @@
-# XOR Gate 구현
-
-***
+---
+title: XOR Gate 구현 실습
+slug: xor-gate-practice
+category: ai/practice
+summary: 단층 신경망의 XOR 실패, 다층 퍼셉트론으로 성공, Wide vs Deep 비교, BCEWithLogitsLoss 권장 코드
+tags: [ai, practice, xor, mlp, pytorch, sigmoid, bce, wide-deep]
+sort_order: 5
+created: 2025-04-26
+updated: 2026-05-10
+---
 
 ## 개요
 

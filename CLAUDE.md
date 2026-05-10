@@ -27,20 +27,26 @@
 ## 폴더 구조
 ```
 Sonsurae/
-├── .claude/                  # Harness Engineering 설정 (8 agents + 6 commands + 3 workflows)
+├── .claude/                          # Harness Engineering 설정 (8 agents + 6 commands + 3 workflows)
 ├── docs/
-│   ├── system/               # 시스템 문서 (작성 예정)
-│   └── troubleshooting/      # 트러블슈팅 사례
+│   ├── system/                       # 시스템 문서 (overview / pages / components / data-flow / integrations)
+│   └── troubleshooting/              # 트러블슈팅 사례
 ├── src/
-│   ├── app/                  # Next.js App Router (페이지, layout)
-│   ├── components/           # 재사용 컴포넌트
-│   ├── lib/                  # 비즈니스 로직, Supabase 클라이언트
-│   └── types/                # 타입 정의
+│   ├── app/                          # Next.js App Router (페이지, layout, sitemap, robots)
+│   ├── components/                   # 재사용 컴포넌트 (layout / post / markdown / graph / editor / search / visual)
+│   ├── lib/
+│   │   ├── mock/                     # ⚠ 역사적 이름 — 실제 Supabase 쿼리 살고 있음 (queries.ts). 추후 src/lib/data/ 로 rename
+│   │   ├── supabase/                 # 클라이언트 (server/browser/admin/middleware)
+│   │   ├── actions/                  # Server Actions (posts CRUD, image upload)
+│   │   └── (graph.ts / wikilinks.ts / markdown.ts / search.ts / format.ts / env.ts)
+│   ├── types/                        # 타입 정의 (database.ts)
+│   └── proxy.ts                      # Next 16 인증 게이트 (구 middleware.ts)
 ├── supabase/
-│   ├── migrations/           # SQL 마이그레이션
-│   └── seed.sql
+│   ├── migrations/                   # 0001_init / 0002_rls / 0003_projects
+│   └── seed.sql                      # 카테고리 20개 시드
 ├── scripts/
-│   └── migrate-from-my-website.ts  # 기존 110개 md → Supabase 임포트
+│   └── migrate-from-my-website.mjs   # migration-temp/ → Supabase 임포트 (--published=true 옵션)
+├── migration-temp/                   # 마이그레이션 원본 (변환된 md/이미지 + MAPPING.md)
 ├── CLAUDE.md
 └── README.md
 ```

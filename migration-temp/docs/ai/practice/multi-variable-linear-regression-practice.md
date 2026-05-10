@@ -1,3 +1,14 @@
+---
+title: Multi-variable Linear Regression 실습
+slug: multi-variable-linear-regression-practice
+category: ai/practice
+summary: 다변수 선형 회귀 PyTorch 구현, 행렬 연산, 학습률 설정, CSV 데이터 로딩, NumPy ↔ PyTorch 텐서 변환
+tags: [ai, practice, linear-regression, multi-variable, pytorch, csv, normalization]
+sort_order: 2
+created: 2025-04-26
+updated: 2026-05-10
+---
+
 ## 0. 전체 코드 예시
 
 - **다변수 선형 회귀 실습 코드**
