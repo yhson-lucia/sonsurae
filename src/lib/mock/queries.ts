@@ -174,7 +174,6 @@ export async function getPostBySlug(slug: string): Promise<MockPost | null> {
     .from('posts')
     .select(POST_SELECT)
     .eq('slug', slug)
-    .eq('published', true)
     .maybeSingle();
 
   if (error) throw new Error(`getPostBySlug(${slug}): ${error.message}`);

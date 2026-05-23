@@ -136,6 +136,7 @@ export async function createPost(input: PostInput): Promise<ActionResult<{ id: s
       cover_image_url: input.cover_image_url ?? null,
       parent_post_id: input.parent_post_id ?? null,
       published: input.published ?? false,
+      published_at: input.published ? new Date().toISOString() : null,
       sort_order: input.sort_order ?? 0,
       author_id: user.id,
     })
