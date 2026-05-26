@@ -29,6 +29,11 @@ export default function AdminHomePage() {
           description="에디터 — 마크다운 + 라이브 미리보기"
           accent
         />
+        <AdminCard
+          href="/admin/categories"
+          title="카테고리 관리"
+          description="카테고리 추가·삭제, 계층 구조 설정"
+        />
       </div>
     </div>
   );

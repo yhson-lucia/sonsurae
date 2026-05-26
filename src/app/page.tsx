@@ -39,13 +39,13 @@ export default function HomePage() {
             {/* Display heading */}
             <h1 className="text-display mt-4 text-5xl leading-[1.05] font-bold tracking-tight sm:text-6xl">
               <span className="text-gradient">한 수레씩</span> 옮겨 담는<br />
-              어느 개발자의 학습 노트
+              국제보건 전문가의 학습 노트
             </h1>
 
             {/* Body */}
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-foreground-soft sm:text-lg">
               완성된 지식을 보여주는 곳이 아니라, 배우는 과정을 그대로 남기는 공간이에요.<br className="hidden sm:inline" />
-              {' '}손수레가 짐을 함께 나르듯, 이 블로그가 서로의 학습을 이끌어주는 자리가 되었으면 합니다.
+              {' '}역학, 보건정책, 글로벌보건 주제들을 공부하며 손수 옮겨 담고, 다시 들여다볼 때마다 보강해 갑니다.
             </p>
             <p className="mx-auto mt-3 max-w-xl text-sm text-foreground-mute">
               피드백, 다른 시각, 가르침까지 — 모두 환영합니다.
@@ -80,9 +80,9 @@ export default function HomePage() {
             이 블로그는 어떻게 생겼나요?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-foreground-soft">
-            AI 분야는 변화가 빠릅니다. 새 개념과 새 도구가 끊임없이 쏟아져 나옵니다.<br className="hidden sm:inline" />
-            {' '}그 흐름을 따라가며 정리한 내용을 이 블로그로 손수 옮겨 담고,<br className="hidden sm:inline" />
-            {' '}다시 들여다볼 때마다 보강해 갑니다.
+            국제보건 분야는 넓고 깊습니다. 역학부터 보건정책, 보건시스템, 감염병 대응까지—<br className="hidden sm:inline" />
+            {' '}공부한 내용을 이 블로그로 손수 옮겨 담고,<br className="hidden sm:inline" />
+            {' '}개념과 개념이 어떻게 연결되는지 함께 그려갑니다.
           </p>
         </div>
 
